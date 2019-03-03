@@ -1,0 +1,78 @@
+---
+title: "Report about forestry levels over time"
+author: "Yuchi Hsieh"
+date: "2019/3/1"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+source("analysis.R")
+library("ggplot2")
+```
+
+### This report focuses on data visualizations of global forestry levels over time. It presents the changing trend of average world-wide forested areas, the relationship between CO2 and forest area and the change in forest area levels for each country.
+
+### Summary visualizations
+This graph shows the change of global forested areas over 14 years(1992 to 2016).
+Average forested area is calculated by the mean of all countries' data. This graph 
+clearly shows that there's a downward trend in average forested area although there's
+a small increase from 2015 to 2016. 
+
+```{r line chart of average forested area, echo=FALSE}
+ggplot(data = world_forest) +
+  geom_path(mapping = aes(x = Year, y = average_global_forest_area, group = 1)) +
+  scale_x_discrete(breaks = seq(1992, 2016, 4)) +
+  labs(
+    title = "Average amount of forested areas world-wide over 14 years",
+    y = "Average forested area (% of land area)"
+  )
+```
+
+Graphs below are intended to find out the relationship between **forest area**
+(% of land area) and **CO2 emissions** (metric tons per capita). Data are presented at
+a **four-year** interval(six facets). I calculated the average global CO2 emissions (the 
+**mean** of world CO2 emissions from 1992 to 2014) by the data in World Bank to group
+all countries into two categorical variables which are **"over"** and **"equal or below the average"**. We can learn from this graph that there is **no clear relationship** between forest area and CO2 emissions for countries that have **lower CO2 level** but for countries that 
+have **higher level of CO2**, there is **a weak negative relationship**. That is,
+forest area correlates to  CO2 emissions for some extent.
+
+```{r scatterplots between forest area and CO2 emissions, echo=FALSE}
+ggplot(data = co2_forest) +
+  geom_point(mapping = aes(x = `Forest area (% of land area)`, y = 
+                             `CO2 emissions (metric tons per capita)`,
+                           color = co2_over_average),
+             na.rm = T) +
+  facet_wrap(~Year) +
+  labs(
+    title  = "Forest area versus CO2 emissions",
+    x = "Forest area (% of land area)",
+    y = "CO2 emissions (metric tons per capita)",
+    color = "CO2 level"
+  )
+```
+
+### Map showing changes of forest area
+The map below shows the **forestry changes** for each country from 1992 to 2016.
+We can see from the map that most countries from Africa and South America have lost 
+forest area slightly while most of the countries from Asia and Europe and US have gained
+forest area about 1-10 percent. Also, **a country from Africa** have had the **biggest lost**
+of forested area.
+
+```{r map of forestes area changes, echo=FALSE}
+ggplot(world_shape) +
+  geom_polygon(
+    mapping = aes(x = long, y = lat, group = group, fill = Loss.level),
+    color = "white",
+    size = .1
+  ) +
+  coord_fixed(ratio = 1.6) +
+  scale_fill_brewer(palette = "Set3") +
+  labs(title = "Global change of forest area from 1992 to 2016",
+       fill = "Change of forest area(% of land area)") +
+  theme(plot.margin = margin(0, 0, 0, 0, "cm"))
+```
+
+### Reference
+
+- CO2 emissions(metric tons per capita), The World Bank, [link](https://data.worldbank.org/indicator/EN.ATM.CO2E.PC?end=2014&start=1992)
+
