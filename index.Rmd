@@ -68,8 +68,7 @@ ggplot(world_shape) +
   coord_fixed(ratio = 1.6) +
   scale_fill_brewer(palette = "Set3") +
   labs(title = "Global change of forest area from 1992 to 2016",
-       fill = "Change of forest area(% of land area)") +
-  theme(plot.margin = margin(0, 0, 0, 0, "cm"))
+       fill = "Change of forest area(% of land area)") 
 ```
 
 ### Reference
